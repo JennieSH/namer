@@ -43,6 +43,11 @@ class MyAppState extends ChangeNotifier {
     }
     notifyListeners();
   }
+
+  void removeFavorite(WordPair favorite) {
+    favorites.remove(favorite);
+    notifyListeners();
+  }
 }
 
 class MyHomePage extends StatefulWidget {
@@ -201,10 +206,27 @@ class FavoritesPage extends StatelessWidget {
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
         ),
-        ...favorites.map(
-          (favorite) => ListTile(
-              leading: Icon(Icons.favorite), title: Text(favorite.asLowerCase)),
-        )
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 24),
+          child: Column(
+            children: favorites
+                .map(
+                  (favorite) => Row(
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          appState.removeFavorite(favorite);
+                        },
+                        icon: Icon(Icons.delete),
+                      ),
+                      SizedBox(width: 8),
+                      Text(favorite.asLowerCase)
+                    ],
+                  ),
+                )
+                .toList(),
+          ),
+        ),
       ],
     );
   }
